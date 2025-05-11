@@ -4,7 +4,10 @@ from openai import OpenAI
 from openai.types.chat.chat_completion import ChatCompletion
 
 # Internal imports
-from src.config.settings import OPENAI_API_KEY, OPENAI_COMPLETIONS_MODEL  # , DEEPSEEK_API_KEY
+from src.config.settings import (  # DEEPSEEK_API_KEY,; DEEPSEEK_COMPLETIONS_MODEL,
+    OPENAI_API_KEY,
+    OPENAI_COMPLETIONS_MODEL,
+)
 
 # Initialize OpenAI client
 client = OpenAI(api_key=OPENAI_API_KEY, base_url="https://api.openai.com/v1")

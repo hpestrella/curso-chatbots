@@ -75,7 +75,7 @@ def list_assistants() -> list:
 
 if __name__ == "__main__":
     # Uncomment to list available assistants
-    # list_assistants()
+    list_assistants()
 
     while True:
         user_input = input("🧑: ")

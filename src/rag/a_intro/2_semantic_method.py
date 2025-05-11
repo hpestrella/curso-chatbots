@@ -110,6 +110,23 @@ if __name__ == "__main__":
     # Compute embeddings for reference text
     text_reference_embeddings = compute_embeddings(text_reference, tokenizer, model)
 
+    # jugando con embeddings -------------------------------
+    rey_emb = compute_embeddings("rey", tokenizer, model)
+    reina_emb = compute_embeddings("reina", tokenizer, model)
+    hombre_emb = compute_embeddings("hombre", tokenizer, model)
+    mujer_emb = compute_embeddings("mujer", tokenizer, model)
+
+    # Calculate the analogy vector: king - man + woman.
+    # The embeddings (rey_emb, etc.) are 1D arrays (embedding_dim,).
+    # Vector arithmetic works directly on these 1D arrays.
+    analogy_vector = rey_emb - hombre_emb + mujer_emb
+
+    # For cosine_similarity, inputs should be 2D arrays of shape (n_samples, n_features).
+    # Here, each embedding is a single sample. We reshape them to (1, embedding_dim).
+    res = cosine_similarity(reina_emb.reshape(1, -1), analogy_vector.reshape(1, -1))
+
+    # ------------------------------------------ fin del juego
+
     # Load example sentences
     print("\nCargando frases de ejemplo...")
     sentences_df = load_sentences()
