@@ -191,6 +191,62 @@ Este repositorio contiene todos los recursos necesarios para seguir el curso:
 
 - `/data`: Datos de ejemplo para práctica
 
+La estructura del código es la siguiente:
+
+```
+src/
+├── __init__.py
+├── chatbots/
+│   ├── a_basic.py
+│   ├── a_basic_local.py
+│   ├── b_openai_assistant.py
+│   ├── c_streamlit.py
+│   └── primer_intento/
+│       └── primero.py
+├── config/
+│   ├── __init__.py
+│   ├── parameters.py
+│   └── settings.py
+├── local_llm/
+│   ├── __init__.py
+│   ├── client_local.py
+│   ├── model_local_lc.py
+│   ├── model_local_thf.py
+│   └── README.md
+├── models_ia/
+│   ├── __init__.py
+│   └── call_model.py
+├── proyecto_code/
+│   ├── __init__.py
+│   ├── code_embeddings.py
+│   ├── directed_graph.py
+│   ├── project_tree.py
+│   ├── prompts/
+│   │   ├── __init__.py
+│   │   └── base.py
+│   ├── rag.py
+│   ├── README.md
+│   ├── serialize.py
+│   └── settings.py
+└── rag/
+    ├── a_intro/
+    │   ├── 0_lexical_method.py
+    │   ├── 1_models_intro.py
+    │   ├── 2_semantic_method.py
+    │   ├── __init__.py
+    │   └── helpers_semantic.py
+    ├── a_rag_openai.py
+    ├── b_basica/
+    │   ├── __init__.py
+    │   ├── app.py
+    │   ├── nlp_proc.py
+    │   ├── README.md
+    │   ├── storage.py
+    │   └── utils.py
+    ├── b_rag_local.py
+    ├── b_rag_openai_store.py
+    └── rag_prompting.py
+```
 
 ## 🧩 Metodología
 
