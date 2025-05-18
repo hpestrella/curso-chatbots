@@ -37,9 +37,8 @@ loader = TextLoader(file_path=text, encoding="utf-8")  # Ensure proper encoding
 # 2. Split Text into Smaller Chunks
 # ---------------------------------
 
-text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=500, chunk_overlap=0  # Each chunk has 500 characters  # No overlap
-)
+# Each chunk has 500 characters  - Overlap of 20 characters
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=20)
 
 # Apply text splitting to the loaded document
 data = loader.load_and_split(text_splitter=text_splitter)
@@ -49,7 +48,7 @@ data = loader.load_and_split(text_splitter=text_splitter)
 # -------------------------------
 
 # Using a small, efficient Hugging Face embedding model (e5-small-v2)
-embedding_model = "sentence-transformers/all-MiniLM-L6-v2"
+# embedding_model = "sentence-transformers/all-MiniLM-L6-v2"
 embedding_model = "hiiamsid/sentence_similarity_spanish_es"
 # Embedding model for document retrieval (specifically for Spanish)
 # embed_model_id = "hiiamsid/sentence_similarity_spanish_es"
@@ -85,7 +84,7 @@ if is_test:
 retriever = index.as_retriever()
 retriever.search_kwargs["fetch_k"] = 10  # Fetch 10 documents before re-ranking
 retriever.search_kwargs["maximal_marginal_relevance"] = True  # Ensures diverse results
-retriever.search_kwargs["k"] = 2  # Return top 1 most relevant documents
+retriever.search_kwargs["k"] = 5  # Return top 1 most relevant documents
 
 # ---------------------------------- TEST RETRIEVER ------------------------------------>
 if is_test:
