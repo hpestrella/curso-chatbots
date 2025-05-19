@@ -25,21 +25,22 @@ from loguru import logger
 from openai import OpenAI
 from pydantic import BaseModel
 
-# Local application imports
-from proyecto_code.directed_graph import (
-    analyze_project,
-    filter_graph,
-    visualize_directed_graph_interactive,
-)
-from proyecto_code.prompts.base import prompt_base
-from proyecto_code.serialize import build_dependencies_files
 from src.config.settings import (
     DATA_PATH,
     OPENAI_API_KEY,
     OPENAI_COMPLETIONS_MODEL,
     OPENAI_EMBEDDINGS_MODEL,
 )
+
+# Local application imports
+from src.proyecto_code.directed_graph import (
+    analyze_project,
+    filter_graph,
+    visualize_directed_graph_interactive,
+)
 from src.proyecto_code.project_tree import main
+from src.proyecto_code.prompts.base import prompt_base
+from src.proyecto_code.serialize import build_dependencies_files
 
 # Create data directory if it doesn't exist
 CODE_FOLDER = DATA_PATH / "code"
