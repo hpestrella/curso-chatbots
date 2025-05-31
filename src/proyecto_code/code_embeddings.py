@@ -25,25 +25,22 @@ from loguru import logger
 from openai import OpenAI
 from pydantic import BaseModel
 
-# Local application imports
-from proyecto_code.directed_graph import (
-    analyze_project,
-    filter_graph,
-    visualize_directed_graph_interactive,
-)
-from proyecto_code.prompts.base import prompt_base
-from proyecto_code.serialize import build_dependencies_files
 from src.config.settings import (
     DATA_PATH,
     OPENAI_API_KEY,
     OPENAI_COMPLETIONS_MODEL,
     OPENAI_EMBEDDINGS_MODEL,
 )
-from src.proyecto_code.project_tree import main
 
-# Create data directory if it doesn't exist
-CODE_FOLDER = DATA_PATH / "code"
-os.makedirs(CODE_FOLDER, exist_ok=True)
+# Local application imports
+from src.proyecto_code.directed_graph import (
+    analyze_project,
+    filter_graph,
+    visualize_directed_graph_interactive,
+)
+from src.proyecto_code.project_tree import main
+from src.proyecto_code.prompts.base import prompt_base
+from src.proyecto_code.serialize import build_dependencies_files
 
 
 class Answer(BaseModel):
@@ -82,9 +79,12 @@ class CoderAI:
     INDEX_NAME = "code_embeddings.index"
     META_NAME = "metadata.pkl"
     DEPENDENCIES_GRAPH = "dependencies_graph.gml"
-    index_path = os.path.join(DATA_PATH, INDEX_NAME)
-    meta_path = os.path.join(DATA_PATH, META_NAME)
-    graph_path = os.path.join(DATA_PATH, DEPENDENCIES_GRAPH)
+    # Create data directory if it doesn't exist
+    CODE_FOLDER = DATA_PATH / "code"
+    os.makedirs(CODE_FOLDER, exist_ok=True)
+    index_path = os.path.join(CODE_FOLDER, INDEX_NAME)
+    meta_path = os.path.join(CODE_FOLDER, META_NAME)
+    graph_path = os.path.join(CODE_FOLDER, DEPENDENCIES_GRAPH)
     index = None
     metadata = None
     graph = None
@@ -115,11 +115,14 @@ class CoderAI:
             dependency_graph, dependencies = analyze_project(self.project_path)
             logger.info("Dependency extraction complete.")
             # Save the dependency graph for later use
-            nx.write_gml(dependency_graph, os.path.join(CODE_FOLDER, self.DEPENDENCIES_GRAPH))
+            nx.write_gml(dependency_graph, self.graph_path)
 
             # Step 2: Extract code snippets (functions and classes) using the project dependencies
             code_snippets, metadata = self.extract_code_snippets(dependencies)
             logger.info(f"Extracted {len(code_snippets)} code snippets from the project.")
+            if len(code_snippets) == 0:
+                logger.error("No code snippets found in the project.")
+                raise ValueError("No code snippets found in the project.")
 
             # Step 3: Compute embeddings for each code snippet
             embeddings = np.array([self.get_code_embedding(snippet) for snippet in code_snippets])
@@ -139,7 +142,9 @@ class CoderAI:
                 self.metadata = pickle.load(f)
 
         except Exception as e:
-            logger.error(f"Error loading metadata: {e} -> delete all content in {CODE_FOLDER}")
+            logger.error(
+                f"Error loading metadata: {e} -> delete all content in {self.CODE_FOLDER}"
+            )
             raise
 
     def get_code_embedding(self, code_snippet: str) -> np.ndarray:
@@ -357,12 +362,12 @@ class CoderAI:
 
 if __name__ == "__main__":
     # Example usage of the CoderAI class
-    project_path = r"C:\Users\ecepeda\OneDrive - analitika.fr\Documentos\PROYECTOS\ANALITIKA\PycharmProjects\neural_networks\coder"
+    project_path = r"C:\Users\ecepeda\PycharmProjects\curso-chatbots\src\models_ia"
 
     coder = CoderAI(project_path)
 
     # Sample query to find relevant code snippets
-    query_code = "where is the CoderAI class"
+    query_code = "What model ia am I using to generate embeddings?"
     similar_snippets = coder.search_similar_code(query_code)
 
     # Extract unique file paths from the returned metadata
@@ -400,7 +405,7 @@ if __name__ == "__main__":
 
     # Example task for the AI to perform
     task_question = """
-        Make the documentation for the CoderAI class. Consider all the given information.
+        Make the documentation the code. Consider all the given information.
     """
 
     # Format prompt and generate an answer
@@ -413,6 +418,6 @@ if __name__ == "__main__":
         task_question=task_question,
     )
 
-    ans_ = coder.generate_answer(prompt)
-    print(ans_.response)
-    print(ans_.code_snippet)
+    ans_code = coder.generate_answer(prompt)
+    print(ans_code.response)
+    print(ans_code.code_snippet)

@@ -38,7 +38,7 @@ loader = TextLoader(file_path=text, encoding="utf-8")  # Ensure proper encoding
 # ---------------------------------
 
 # Each chunk has 500 characters  - Overlap of 20 characters
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=20)
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=40, chunk_overlap=30)
 
 # Apply text splitting to the loaded document
 data = loader.load_and_split(text_splitter=text_splitter)
